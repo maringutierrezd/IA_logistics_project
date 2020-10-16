@@ -2,7 +2,7 @@ package main;
 import IA.Azamon.*;
 import java.util.*;
 
-
+//TODO: No hace falta tener la lista de paquetes y ofertas en el estado. Es info fija.
 public class Estado {
     // Atributos privados:
     static Paquetes P;		// Inputs
@@ -12,43 +12,50 @@ public class Estado {
     private ArrayList <Double> espLibre; //Peso libre de cada oferta
 
     private int felicidad;
-    private double costes;					// Coste total = € almacenaje + € transporte
-    private double ingresos;
+    private double costes;	// Coste total = € almacenaje + € transporte
+    private double ingresos; // De momento no usamos esto
 
     // Atributos públicos:
     // Constructora(s):
 
     //Constructora del estado inicial
-    public Estado (Paquetes p, Transporte t) {
-        this.P = p;
-        this.T = t;
+    public Estado () {
         this.felicidad = 0;
         this.costes = 0;
         this.asig = new ArrayList<Integer>();
         for (int i=0; i<P.size(); ++i) asig.add(-1);
         this.espLibre = new ArrayList <Double> ();
-        for (int i=0; i<T.size(); ++i) espLibre.add(new Double (T.get(i).getPesomax()));
+        for (int i=0; i<T.size(); ++i) espLibre.add(T.get(i).getPesomax());
     }
 
-/*	public Estado(int npaq, double prop, int seedP, int seedT) {
-		asig = new ArrayList(npaq);
-		for(int i = 0; i<npaq; ++i) {
-			asig.add(i, -1);
-		}
-		espLibre = new ArrayList(T.size());
-		P = new Paquetes(npaq, seedP);
-		T = new Transporte(P, prop, seedT);
-		espLibre = new ArrayList(T.size());
-		for(int i = 0; i<T.size(); ++i) {
-			double pm = T.get(i).getPesomax();
-			espLibre.add(i, pm);
-		}
-		felicidad = 0;
-		costes = 0.0;
-		ingresos = 0.0;
-	}
+    //Constructora para nuevos sucesores
+    public Estado(int newFelicidad, double newCostes, ArrayList<Double> newEspLibre, ArrayList<Integer> newAsig) {
+        felicidad = newFelicidad;
+        costes = newCostes;
+        espLibre = newEspLibre;
+        asig = newAsig;
+    }
 
-*/
+    //Setters:
+    public static void setInputs ( Transporte t, Paquetes p){
+        T = t;
+        P = p;
+    }
+
+    public void setFelicidad (int f){
+        felicidad = f;
+    }
+
+    public void  setAsig (int i, int j){
+        asig.set(i, j);
+    }
+
+    public void setCostes (Double c){
+        costes = c;
+    }
+    public void setEspLibre (ArrayList<Double> e){
+        espLibre = e;
+    }
 
     // Getters:
     public double getCostes() {
@@ -66,6 +73,20 @@ public class Estado {
     public Paquetes getPaquetes () {
         return P;
     }
+
+    public Transporte getTransporte(){
+        return T;
+    }
+
+    public ArrayList<Integer> getAsig(){
+        return asig;
+    }
+
+    public ArrayList<Double> getEspLibre(){
+        return espLibre;
+    }
+
+
     // Calculadoras:
     private void calculaFelicidad() {
         for(int i = 0; i < asig.size(); ++i) {
