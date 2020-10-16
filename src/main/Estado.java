@@ -104,7 +104,7 @@ public class Estado {
         }
     }
 
-    private void calculaCoste() {
+    /*private void calculaCoste() {
         for(int i = 0; i < espLibre.size(); ++i) {
             double ocupado = T.get(i).getPesomax() - espLibre.get(i);
             costes += ocupado*T.get(i).getPrecio();
@@ -117,7 +117,7 @@ public class Estado {
             else if(P.get(i).getPrioridad() == 1) ingresos += 3;
             else ingresos += 1.5;
         }
-    }
+    }*/
 
     //TODO: Asegurarse de que no se asignan a ofertas de prioridad mayor
     private int auxGenerador1 (int currentOfert, ArrayList <Integer> paq) {
@@ -182,7 +182,7 @@ public class Estado {
 
     //Generadores Iniciales
     public void generador1 () {
-        //dividimos paquetes en 3 vectores segun prioridad. Esto tiene coste O(n) ordenarlos seria nlogn.
+        //dividimos paquetes en 3 vectores segun prioridad. Esto tiene coste O(n), ordenarlos sería O(n*logn)
         ArrayList <Integer> paq1 = new ArrayList <Integer> ();
         ArrayList <Integer> paq2 = new ArrayList <Integer> ();
         ArrayList <Integer> paq3 = new ArrayList <Integer> ();
