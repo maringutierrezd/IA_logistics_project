@@ -97,9 +97,13 @@ public class Estado {
     }
 
     public void calculaCoste() {
-        for(int i = 0; i < espLibre.size(); ++i) {
-            double ocupado = T.get(i).getPesomax() - espLibre.get(i);
-            costes += ocupado*T.get(i).getPrecio();
+        int noches_almacen;
+        for(int i = 0; i < asig.size(); ++i) {
+            int dias_viaje =  T.get(asig.get(i)).getDias();
+            if (dias_viaje == 1) noches_almacen = 0;
+            else if (dias_viaje <= 3) noches_almacen = 1;
+            else noches_almacen = 2;
+            costes+=P.get(i).getPeso()* T.get(asig.get(i)).getPrecio() + 0.25 * P.get(i).getPeso() * noches_almacen;
         }
     }
 
@@ -119,17 +123,6 @@ public class Estado {
                 asig.set(paqueteActual, currentOfert);
                 // restamos el peso
                 espLibre.set(currentOfert, espLibre.get(currentOfert)-P.get(paqueteActual).getPeso());
-                // aumentamos coste
-                costes += P.get(paqueteActual).getPeso()*T.get(currentOfert).getPrecio() + 0.25 * P.get(paqueteActual).getPeso() * noches_almacen;
-                //calculamos felicidad
-                int prioridad = P.get(paqueteActual).getPrioridad();
-                if (prioridad != 0) {
-                    if (prioridad == 1) {if (T.get(currentOfert).getDias()==1) ++felicidad; }
-                    else {
-                        if (T.get(currentOfert).getDias() < 4) felicidad += (4 - T.get(currentOfert).getDias());
-                    }
-                }
-
             }
 
             //si ya hemos llegado al final de las ofertas (poco probable)
@@ -141,16 +134,6 @@ public class Estado {
                         asig.set(paqueteActual, j);
                         // restamos el peso
                         espLibre.set(j, espLibre.get(j)-P.get(paqueteActual).getPeso());
-                        // aumentamos coste
-                        costes += P.get(paqueteActual).getPeso()*T.get(j).getPrecio() + 0.25 * P.get(paqueteActual).getPeso() * noches_almacen;
-                        //calculamos felicidad
-                        int prioridad = P.get(paqueteActual).getPrioridad();
-                        if (prioridad != 0) {
-                            if (prioridad == 1) {if (T.get(j).getDias()==1) ++felicidad; }
-                            else {
-                                if (T.get(j).getDias() < 4) felicidad += (4 - T.get(j).getDias());
-                            }
-                        }
                     }
                     else System.out.println("Error! Paquetes no caben en ofertas");
                 }
@@ -186,6 +169,7 @@ public class Estado {
 
         System.out.println("Las asignaciones son: ");
         System.out.println(asig);
+        calculaCoste(); calculaFelicidad();
     }
 
     // Este generador va a meter paquetes en ofertas siempre que pueda, cumpliendo las condiciones mínimas
