@@ -8,24 +8,25 @@ public class Estado {
     static Paquetes P;		// Inputs
     static Transporte T;
 
-    private ArrayList<Integer> asig;  //Posicion significa paquete, contenido significa oferta
-    private ArrayList <Double> espLibre; //Peso libre de cada oferta
+    private ArrayList<Integer> asig = new ArrayList<>();  //Posicion significa paquete, contenido significa oferta
+    private ArrayList<Double> espLibre = new ArrayList<>(); //Peso libre de cada oferta
 
     private int felicidad;
     private double costes;	// Coste total = € almacenaje + € transporte
-    private double ingresos; // De momento no usamos esto
 
     // Atributos públicos:
     // Constructora(s):
 
     //Constructora del estado inicial
-    public Estado () {
+    public Estado (Paquetes p, Transporte t) {
         this.felicidad = 0;
         this.costes = 0;
-        this.asig = new ArrayList<Integer>();
-        for (int i=0; i<P.size(); ++i) asig.add(-1);
-        this.espLibre = new ArrayList <Double> ();
-        for (int i=0; i<T.size(); ++i) espLibre.add(T.get(i).getPesomax());
+        P = p;
+        T = t;
+        for (int i=0; i<P.size(); ++i) asig.add(i, -1);
+        for (int i=0; i<T.size(); ++i) {
+            espLibre.add(T.get(i).getPesomax());
+        }
     }
 
     //Constructora para nuevos sucesores
@@ -37,11 +38,6 @@ public class Estado {
     }
 
     //Setters:
-    public static void setInputs ( Transporte t, Paquetes p){
-        T = t;
-        P = p;
-    }
-
     public void setFelicidad (int f){
         felicidad = f;
     }
@@ -60,10 +56,6 @@ public class Estado {
     // Getters:
     public double getCostes() {
         return costes;
-    }
-
-    public double getIngresos() {
-        return ingresos;
     }
 
     public int getFelicidad() {
@@ -88,7 +80,7 @@ public class Estado {
 
 
     // Calculadoras:
-    private void calculaFelicidad() {
+    public void calculaFelicidad() {
         for(int i = 0; i < asig.size(); ++i) {
             Paquete p = P.get(i);
             Oferta o = T.get(asig.get(i));
@@ -104,20 +96,12 @@ public class Estado {
         }
     }
 
-    /*private void calculaCoste() {
+    public void calculaCoste() {
         for(int i = 0; i < espLibre.size(); ++i) {
             double ocupado = T.get(i).getPesomax() - espLibre.get(i);
             costes += ocupado*T.get(i).getPrecio();
         }
     }
-
-    private void calculaIngresos() {
-        for(int i = 0; i < P.size(); ++i) {
-            if(P.get(i).getPrioridad() == 0) ingresos += 5;
-            else if(P.get(i).getPrioridad() == 1) ingresos += 3;
-            else ingresos += 1.5;
-        }
-    }*/
 
     //TODO: Asegurarse de que no se asignan a ofertas de prioridad mayor
     private int auxGenerador1 (int currentOfert, ArrayList <Integer> paq) {
@@ -202,5 +186,10 @@ public class Estado {
 
         System.out.println("Las asignaciones son: ");
         System.out.println(asig);
+    }
+
+    // Este generador va a meter paquetes en ofertas siempre que pueda, cumpliendo las condiciones mínimas
+    public void generadorTonto() {
+        //TODO Marín hazlo mañana me da palo hacerlo ahora
     }
 }
