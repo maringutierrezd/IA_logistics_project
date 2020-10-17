@@ -2,7 +2,7 @@ package main;
 import IA.Azamon.*;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.*;
-import heuristicFunctions.Heuristica1;
+import heuristicFunctions.*;
 import succesorFunctions.*;
 import aima.search.framework.Problem;
 import aima.search.framework.Successor;
@@ -30,7 +30,7 @@ public class Main {
 
         //Generamos el problema (solucion inicial, succesor function, goal test, heuristic function)
         SuccesorF succ = new SuccesorF(true);
-        Problem problemHC = new Problem(e, succ, state->true, new Heuristica1());
+        Problem problemHC = new Problem(e, succ, state->true, new Heuristica2());
         try{
             HillClimbingSearch HCS = new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problemHC, HCS);

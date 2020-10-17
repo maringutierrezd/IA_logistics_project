@@ -172,8 +172,7 @@ public class Estado {
         calculaCoste(); calculaFelicidad();
     }
 
-    // Este generador va a meter paquetes en ofertas siempre que pueda, cumpliendo las condiciones mínimas
-    public void generadorTonto() {
-        //TODO Marín hazlo mañana me da palo hacerlo ahora
+    public void generador2() {
+
     }
 }
