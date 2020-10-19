@@ -56,7 +56,6 @@ public class SuccesorF implements SuccessorFunction {
             }
         }
 
-
         if (meterIntercambiar){
             for (int i=0; i<p.size(); ++i){
                 for (int j=i+1; j<p.size(); ++j){
@@ -77,7 +76,7 @@ public class SuccesorF implements SuccessorFunction {
                         //Cambiamos los datos del sucesor
                         intecambiamosIconJ(sucesor, i, j);
                         retval.add(new Successor("intercambiamos " + i + " con " + j, sucesor));
-                        System.out.println("intercambiamos" + i + " con " + j);
+                        //System.out.println("intercambiamos" + i + " con " + j);
                     }
                 }
             }
@@ -177,7 +176,7 @@ public class SuccesorF implements SuccessorFunction {
         //Hacemos costes
         costes += calcular_costes(e,i);
         //Hacemos espacio libre
-        espLibre.set(j,espLibre.get(j)+p.get(i).getPeso());
+        espLibre.set(j,espLibre.get(j)-p.get(i).getPeso());
 
         //Seteamos felicidad costes y espacio libre
         e.setFelicidad(felicidad);
