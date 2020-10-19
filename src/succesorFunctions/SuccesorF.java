@@ -77,7 +77,7 @@ public class SuccesorF implements SuccessorFunction {
                         //Cambiamos los datos del sucesor
                         intecambiamosIconJ(sucesor, i, j);
                         retval.add(new Successor("intercambiamos " + i + " con " + j, sucesor));
-                        System.out.println("intercambiamos" + i + " con " + j);
+                        //System.out.println("intercambiamos" + i + " con " + j);
                     }
                 }
             }
