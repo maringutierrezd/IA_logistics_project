@@ -37,6 +37,12 @@ public class Estado {
         asig = newAsig;
     }
 
+    //Constructora para nuevos sucesores sin tener en cuenta felicidad y costes
+    public Estado(ArrayList<Integer> newAsig, ArrayList<Double> newEspLibre) {
+        espLibre = newEspLibre;
+        asig = newAsig;
+    }
+
     //Setters:
     public void setFelicidad (int f){
         felicidad = f;
@@ -162,8 +168,8 @@ public class Estado {
         currentOfert = auxGenerador1 (currentOfert, paq2);
         auxGenerador1(currentOfert, paq3);
 
-        System.out.println("Las asignaciones son: ");
-        System.out.println(asig);
+        //System.out.println("Las asignaciones son: ");
+        //System.out.println(asig);
         calculaCoste(); calculaFelicidad();
     }
 
@@ -219,8 +225,9 @@ public class Estado {
         currentOfert = auxGenerador2 (currentOfert, paq2);
         auxGenerador2(currentOfert, paq1);
 
-        System.out.println("Las asignaciones son: ");
-        System.out.println(asig);
-        calculaCoste(); calculaFelicidad();
+        //System.out.println("Las asignaciones son: ");
+        //System.out.println(asig);
+        calculaCoste();
+        calculaFelicidad();
     }
 }
