@@ -29,7 +29,7 @@ public class Sucesor0 implements SuccessorFunction {
 
         for(int i=0; i<P.size(); ++i) {
             int ofetaActual = actualAsig.get(i);
-            for(int j=0; j<P.size(); ++j) {
+            for(int j=0; j<T.size(); ++j) {
                 if(j!=ofetaActual && actualEspLibre.get(j) >= P.get(i).getPeso() && cumplePrio(P.get(i).getPrioridad(), T.get(j).getDias())) {
                     ArrayList<Double> newEspLibre = new ArrayList<Double>((ArrayList<Double>)actualEspLibre.clone());
                     ArrayList<Integer> newAsig = new ArrayList<Integer>((ArrayList<Integer>)actualAsig.clone());

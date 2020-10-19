@@ -16,7 +16,7 @@ public class Main {
 
     public static void main (String[] args) {
         //Aqui hemos de definir los paquetes, las ofertas.. En definitiva, el problema
-        Paquetes paquetes = new Paquetes(10, 1234); //la seed 1234 es la del experimento que debemos hacer
+        Paquetes paquetes = new Paquetes(1000, 1234); //la seed 1234 es la del experimento que debemos hacer
         Transporte transporte = new Transporte(paquetes, 1.2, 1234);
         //Ahora creamos el estado inicial
         Estado e = new Estado(paquetes, transporte);
