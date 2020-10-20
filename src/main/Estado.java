@@ -48,8 +48,8 @@ public class Estado {
         felicidad = f;
     }
 
-    public void  setAsig (int i, int j){
-        asig.set(i, j);
+    public void  setAsig (int paquete, int oferta){
+        asig.set(paquete, oferta);
     }
 
     public void setCostes (Double c){
