@@ -44,12 +44,12 @@ public class Sucesor0 implements SuccessorFunction {
                     set(sucesor, i, j); // aplicamos el operador set
 
                     // añadimos el sucesor a la lista
-                    System.out.println("Metemos el paquete " + i + " en la oferta" + j);
+                    //System.out.println("Metemos el paquete " + i + " en la oferta" + j);
                     ret.add(new Successor("Metemos el paquete " + i + " en la oferta" + j, sucesor));
                 }
             }
         }
-        System.out.println("pasamos de iteracion");
+        //System.out.println("pasamos de iteracion");
         if (meterIntercambiar){
             for (int i=0; i<P.size(); ++i){
                 for (int j=i+1; j<P.size(); ++j){
@@ -60,7 +60,7 @@ public class Sucesor0 implements SuccessorFunction {
                     boolean cabeJ = (actualEspLibre.get(ofertaI)+P.get(i).getPeso()>=P.get(j).getPeso());
                     boolean cumplePrioI = cumplePrio(P.get(i).getPrioridad(),T.get(ofertaJ).getDias());
                     boolean cumplePrioJ = cumplePrio(P.get(j).getPrioridad(),T.get(ofertaI).getDias());
-                    if (cabeI && cabeJ && cumplePrioI && cumplePrioJ){
+                    if (cabeI && cabeJ && cumplePrioI && cumplePrioJ && ofertaI!=ofertaJ){
                         int newFelicidad = actualFelicidad;
                         double newCostes = actualCostes;
                         ArrayList<Double> newEspLibre = new ArrayList<Double>((ArrayList<Double>)actualEspLibre.clone());
@@ -69,12 +69,13 @@ public class Sucesor0 implements SuccessorFunction {
                         Estado sucesor = new Estado(newFelicidad, newCostes, newEspLibre, newAsig);
                         //Cambiamos los datos del sucesor
                         intecambiamosIconJ(sucesor, i, j);
-                        ret.add(new Successor("intercambiamos " + i + " con " + j, sucesor));
-                        System.out.println("intercambiamos" + i + " con " + j);
+                        Successor anadir = new Successor("intercambiamos " + i + " con " + j, sucesor);
+                        ret.add(anadir);
+                        //System.out.println("intercambiamos" + i + " con " + j);
                     }
                 }
             }
-            System.out.println("pasamos de iteracion");
+            //System.out.println("pasamos de iteracion");
         }
         return ret;
     }
@@ -96,8 +97,9 @@ public class Sucesor0 implements SuccessorFunction {
         ArrayList<Double> espLibre = (ArrayList<Double>)e.getEspLibre().clone();
         int ofertaAnteriorI = e.getAsig().get(i);
         int ofertaAnteriorJ = e.getAsig().get(j);
-        espLibre.set(ofertaAnteriorI, espLibre.get(ofertaAnteriorI)+p.get(i).getPeso());
-        espLibre.set(ofertaAnteriorJ, espLibre.get(ofertaAnteriorJ)+p.get(j).getPeso());
+
+        espLibre.set(ofertaAnteriorI, espLibre.get(ofertaAnteriorI)+p.get(i).getPeso()-p.get(j).getPeso());
+        espLibre.set(ofertaAnteriorJ, espLibre.get(ofertaAnteriorJ)+p.get(j).getPeso()-p.get(i).getPeso());
 
         //Hacemos la nueva asignación
         e.setAsig(i,ofertaAnteriorJ);
@@ -116,7 +118,6 @@ public class Sucesor0 implements SuccessorFunction {
         e.setCostes(costes);
         e.setEspLibre(espLibre);
     }
-
 
     // pre: el Estado e es un estado inicializado. El paquete i esta asignado a alguna oferta en el estado e
     // post: devuelve el entero correspondiente a la felicidad que aporta i en el estado e

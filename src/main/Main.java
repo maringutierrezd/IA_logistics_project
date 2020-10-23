@@ -16,7 +16,8 @@ public class Main {
 
     public static void main (String[] args) {
         //Aqui hemos de definir los paquetes, las ofertas.. En definitiva, el problema
-        Paquetes paquetes = new Paquetes(1000, 1234); //la seed 1234 es la del experimento que debemos hacer
+        Paquetes paquetes = new Paquetes(4, 1234 ); //la seed 1234 es la del experimento que debemos hacer
+
         Transporte transporte = new Transporte(paquetes, 1.2, 1234);
         //Ahora creamos el estado inicial
         Estado e = new Estado(paquetes, transporte);
@@ -27,7 +28,7 @@ public class Main {
 
         double time = new Date().getTime();
         //Generamos el estado (solucion inicial)
-        e.generador1();
+        e.generador2();
         System.out.println(paquetes);
         System.out.println(transporte);
         System.out.println(e.getAsig());
@@ -35,9 +36,9 @@ public class Main {
         System.out.println("El coste de la solución inicial es " + e.getCostes() + "\n");
 
         //Generamos el problema (solucion inicial, succesor function, goal test, heuristic function)
-        SuccesorF succ = new SuccesorF(false);
-        Sucesor0 succ0 = new Sucesor0(false);
-        Problem problemHC = new Problem(e, succ0, state->true, new Heuristica1());
+
+        Sucesor0 succ0 = new Sucesor0(true);
+        Problem problemHC = new Problem(e, succ0, state->true, new Heuristica2());
         try{
             HillClimbingSearch HCS = new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problemHC, HCS);
