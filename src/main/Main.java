@@ -5,7 +5,6 @@ import aima.search.informed.*;
 import heuristicFunctions.*;
 import succesorFunctions.*;
 import aima.search.framework.Problem;
-import aima.search.framework.Successor;
 
 import java.util.Date;
 import java.util.Properties;
@@ -16,7 +15,7 @@ public class Main {
 
     public static void main (String[] args) {
         //Aqui hemos de definir los paquetes, las ofertas.. En definitiva, el problema
-        Paquetes paquetes = new Paquetes(4, 1234 ); //la seed 1234 es la del experimento que debemos hacer
+        Paquetes paquetes = new Paquetes(100, 1234 ); //la seed 1234 es la del experimento que debemos hacer
 
         Transporte transporte = new Transporte(paquetes, 1.2, 1234);
         //Ahora creamos el estado inicial
@@ -36,11 +35,12 @@ public class Main {
         System.out.println("El coste de la solución inicial es " + e.getCostes() + "\n");
 
         //Generamos el problema (solucion inicial, succesor function, goal test, heuristic function)
-
-        Sucesor0 succ0 = new Sucesor0(true);
-        Problem problemHC = new Problem(e, succ0, state->true, new Heuristica2());
+        //Sucesor0 succ0 = new Sucesor0(true); //Hill Climbing----------------------------
+        SuccesorSA succ0 = new SuccesorSA(true, 1234); //Simulated Annealing--------------------
+        Problem problemHC = new Problem(e, succ0, state->true, new Heuristica1());
         try{
-            HillClimbingSearch HCS = new HillClimbingSearch();
+            //HillClimbingSearch HCS = new HillClimbingSearch(); //Hill Climbing----------------
+            SimulatedAnnealingSearch HCS = new SimulatedAnnealingSearch(50000000,100,10,0.001D); //Simulated Annealing-------------
             SearchAgent agent = new SearchAgent(problemHC, HCS);
             System.out.println(agent.getActions());
 
