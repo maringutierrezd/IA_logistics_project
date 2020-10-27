@@ -14,8 +14,9 @@ public class SuccesorSA implements SuccessorFunction{
     private Random rand;
     private Paquetes P;
     private Transporte T;
+    private boolean meterIntercambiar;
 
-    public SuccesorSA(int seed) {rand = new Random(seed);}
+    public SuccesorSA(boolean meterInt, int seed) {meterIntercambiar=meterInt; rand = new Random(seed);}
     public List getSuccessors(Object state) {
 
         ArrayList<Successor> ret = new ArrayList<Successor>();
@@ -29,51 +30,54 @@ public class SuccesorSA implements SuccessorFunction{
         int actualFelicidad = actual.getFelicidad();
         double actualCostes = actual.getCostes();
 
-        double prob = rand.nextDouble();
-        if(prob < 0.5) {
-            int i = rand.nextInt(P.size());
-            int j = rand.nextInt(T.size());
-            int ofetaActual = actualAsig.get(i);
-            if (j != ofetaActual && actualEspLibre.get(j) >= P.get(i).getPeso() && cumplePrio(P.get(i).getPrioridad(), T.get(j).getDias())) {
-                ArrayList<Double> newEspLibre = new ArrayList<Double>((ArrayList<Double>) actualEspLibre.clone());
-                ArrayList<Integer> newAsig = new ArrayList<Integer>((ArrayList<Integer>) actualAsig.clone());
+        boolean corr = false;
+        while(!corr) {
+            if(rand.nextInt(2)==0 || !meterIntercambiar) {
+                int i = rand.nextInt(P.size());
+                int j = rand.nextInt(T.size());
+                int ofetaActual = actualAsig.get(i);
+                if (j != ofetaActual && actualEspLibre.get(j) >= P.get(i).getPeso() && cumplePrio(P.get(i).getPrioridad(), T.get(j).getDias())) {
+                    ArrayList<Double> newEspLibre = new ArrayList<Double>((ArrayList<Double>) actualEspLibre.clone());
+                    ArrayList<Integer> newAsig = new ArrayList<Integer>((ArrayList<Integer>) actualAsig.clone());
 
-                int newFelicidad = actualFelicidad;
-                double newCostes = actualCostes;
-                Estado sucesor = new Estado(newFelicidad, newCostes, newEspLibre, newAsig);
+                    int newFelicidad = actualFelicidad;
+                    double newCostes = actualCostes;
+                    Estado sucesor = new Estado(newFelicidad, newCostes, newEspLibre, newAsig);
 
-                set(sucesor, i, j); // aplicamos el operador set
+                    set(sucesor, i, j); // aplicamos el operador set
 
-                // añadimos el sucesor a la lista
-                //System.out.println("Metemos el paquete " + i + " en la oferta" + j);
-                ret.add(new Successor("Metemos el paquete " + i + " en la oferta" + j, sucesor));
+                    // añadimos el sucesor a la lista
+                    //System.out.println("Metemos el paquete " + i + " en la oferta" + j);
+                    ret.add(new Successor("Metemos el paquete " + i + " en la oferta" + j, sucesor));
+                    corr = true;
+                }
             }
-        }
-        //System.out.println("pasamos de iteracion");
-        else{
-            int i = rand.nextInt(P.size());
-            int j = rand.nextInt(P.size());
-            //Condiciones de aplicabilidad: que ambos quepan y que se cumplan prioridades
-            int ofertaI = actualAsig.get(i);
-            int ofertaJ = actualAsig.get(j);
-            boolean cabeI = (actualEspLibre.get(ofertaJ)+P.get(j).getPeso()>=P.get(i).getPeso());
-            boolean cabeJ = (actualEspLibre.get(ofertaI)+P.get(i).getPeso()>=P.get(j).getPeso());
-            boolean cumplePrioI = cumplePrio(P.get(i).getPrioridad(),T.get(ofertaJ).getDias());
-            boolean cumplePrioJ = cumplePrio(P.get(j).getPrioridad(),T.get(ofertaI).getDias());
-            if (cabeI && cabeJ && cumplePrioI && cumplePrioJ && ofertaI!=ofertaJ){
-                int newFelicidad = actualFelicidad;
-                double newCostes = actualCostes;
-                ArrayList<Double> newEspLibre = new ArrayList<Double>((ArrayList<Double>)actualEspLibre.clone());
-                ArrayList<Integer> newAsig = new ArrayList<Integer>((ArrayList<Integer>)actualAsig.clone());
-                //Creamos el nuevo estado con estos datos
-                Estado sucesor = new Estado(newFelicidad, newCostes, newEspLibre, newAsig);
-                //Cambiamos los datos del sucesor
-                intecambiamosIconJ(sucesor, i, j);
-                Successor anadir = new Successor("intercambiamos " + i + " con " + j, sucesor);
-                ret.add(anadir);
-                //System.out.println("intercambiamos" + i + " con " + j);
+            else if(meterIntercambiar){
+                int i = rand.nextInt(P.size());
+                int j = rand.nextInt(P.size());
+                //Condiciones de aplicabilidad: que ambos quepan y que se cumplan prioridades
+                int ofertaI = actualAsig.get(i);
+                int ofertaJ = actualAsig.get(j);
+                boolean cabeI = (actualEspLibre.get(ofertaJ) + P.get(j).getPeso() >= P.get(i).getPeso());
+                boolean cabeJ = (actualEspLibre.get(ofertaI) + P.get(i).getPeso() >= P.get(j).getPeso());
+                boolean cumplePrioI = cumplePrio(P.get(i).getPrioridad(), T.get(ofertaJ).getDias());
+                boolean cumplePrioJ = cumplePrio(P.get(j).getPrioridad(), T.get(ofertaI).getDias());
+                if (cabeI && cabeJ && cumplePrioI && cumplePrioJ && ofertaI != ofertaJ) {
+                    int newFelicidad = actualFelicidad;
+                    double newCostes = actualCostes;
+                    ArrayList<Double> newEspLibre = new ArrayList<Double>((ArrayList<Double>) actualEspLibre.clone());
+                    ArrayList<Integer> newAsig = new ArrayList<Integer>((ArrayList<Integer>) actualAsig.clone());
+                    //Creamos el nuevo estado con estos datos
+                    Estado sucesor = new Estado(newFelicidad, newCostes, newEspLibre, newAsig);
+                    //Cambiamos los datos del sucesor
+                    intecambiamosIconJ(sucesor, i, j);
+                    Successor anadir = new Successor("intercambiamos " + i + " con " + j, sucesor);
+                    ret.add(anadir);
+                    corr = true;
+                    //System.out.println("intercambiamos" + i + " con " + j);
+                }
+                //System.out.println("pasamos de iteracion");
             }
-            //System.out.println("pasamos de iteracion");
         }
         return ret;
     }
