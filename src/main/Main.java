@@ -14,6 +14,7 @@ import static java.lang.System.exit;
 public class Main {
 
     public static void main (String[] args) {
+
         //Aqui hemos de definir los paquetes, las ofertas.. En definitiva, el problema
         Paquetes paquetes = new Paquetes(100, 1234 ); //la seed 1234 es la del experimento que debemos hacer
 
