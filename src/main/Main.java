@@ -36,7 +36,7 @@ public class Main {
 
         //Generamos el problema (solucion inicial, succesor function, goal test, heuristic function)
         //Sucesor0 succ0 = new Sucesor0(true); //Hill Climbing----------------------------
-        SuccesorSA succ0 = new SuccesorSA(true, 1234); //Simulated Annealing--------------------
+        SuccesorSA succ0 = new SuccesorSA(1234); //Simulated Annealing--------------------
         Problem problemHC = new Problem(e, succ0, state->true, new Heuristica1());
         try{
             //HillClimbingSearch HCS = new HillClimbingSearch(); //Hill Climbing----------------

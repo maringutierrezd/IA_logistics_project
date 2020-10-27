@@ -11,12 +11,11 @@ import main.Estado;
 import IA.Azamon.*;
 
 public class SuccesorSA implements SuccessorFunction{
-    private boolean meterIntercambiar;
     private Random rand;
     private Paquetes P;
     private Transporte T;
 
-    public SuccesorSA(boolean metInt, int seed) {meterIntercambiar = metInt; rand = new Random();}
+    public SuccesorSA(int seed) {rand = new Random(seed);}
     public List getSuccessors(Object state) {
 
         ArrayList<Successor> ret = new ArrayList<Successor>();
@@ -29,28 +28,31 @@ public class SuccesorSA implements SuccessorFunction{
 
         int actualFelicidad = actual.getFelicidad();
         double actualCostes = actual.getCostes();
-        int i = rand.nextInt(P.size());
-        int j = rand.nextInt(T.size());
 
-        int ofetaActual = actualAsig.get(i);
-        if(j!=ofetaActual && actualEspLibre.get(j) >= P.get(i).getPeso() && cumplePrio(P.get(i).getPrioridad(), T.get(j).getDias())) {
-            ArrayList<Double> newEspLibre = new ArrayList<Double>((ArrayList<Double>)actualEspLibre.clone());
-            ArrayList<Integer> newAsig = new ArrayList<Integer>((ArrayList<Integer>)actualAsig.clone());
+        double prob = rand.nextDouble();
+        if(prob < 0.5) {
+            int i = rand.nextInt(P.size());
+            int j = rand.nextInt(T.size());
+            int ofetaActual = actualAsig.get(i);
+            if (j != ofetaActual && actualEspLibre.get(j) >= P.get(i).getPeso() && cumplePrio(P.get(i).getPrioridad(), T.get(j).getDias())) {
+                ArrayList<Double> newEspLibre = new ArrayList<Double>((ArrayList<Double>) actualEspLibre.clone());
+                ArrayList<Integer> newAsig = new ArrayList<Integer>((ArrayList<Integer>) actualAsig.clone());
 
-            int newFelicidad = actualFelicidad;
-            double newCostes = actualCostes;
-            Estado sucesor = new Estado(newFelicidad,newCostes, newEspLibre,newAsig);
+                int newFelicidad = actualFelicidad;
+                double newCostes = actualCostes;
+                Estado sucesor = new Estado(newFelicidad, newCostes, newEspLibre, newAsig);
 
-            set(sucesor, i, j); // aplicamos el operador set
+                set(sucesor, i, j); // aplicamos el operador set
 
-            // añadimos el sucesor a la lista
-            //System.out.println("Metemos el paquete " + i + " en la oferta" + j);
-            ret.add(new Successor("Metemos el paquete " + i + " en la oferta" + j, sucesor));
+                // añadimos el sucesor a la lista
+                //System.out.println("Metemos el paquete " + i + " en la oferta" + j);
+                ret.add(new Successor("Metemos el paquete " + i + " en la oferta" + j, sucesor));
+            }
         }
         //System.out.println("pasamos de iteracion");
-        if (meterIntercambiar){
-            i = rand.nextInt(P.size());
-            j = rand.nextInt(P.size());
+        else{
+            int i = rand.nextInt(P.size());
+            int j = rand.nextInt(P.size());
             //Condiciones de aplicabilidad: que ambos quepan y que se cumplan prioridades
             int ofertaI = actualAsig.get(i);
             int ofertaJ = actualAsig.get(j);
