@@ -101,7 +101,7 @@ public class Main {
                     System.out.println(i + " " + nodo.getCostes());
                 }
 
-                System.out.println("SOLUCIÓN CON HILL CLIMBING ENCONTRADA:");
+                System.out.println("SOLUCIÓN CON SIMULATED ANNEALING ENCONTRADA:");
 
                 Estado eFinal = (Estado) SAS.getGoalState();
                 System.out.println("FELICIDAD DE LA SOLUCIÓN: " + eFinal.getFelicidad());

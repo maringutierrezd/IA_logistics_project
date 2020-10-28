@@ -19,6 +19,7 @@ public class Sucesor0 implements SuccessorFunction {
     }
 
     public List getSuccessors(Object state) {
+        int count = 0;
         ArrayList<Successor> ret = new ArrayList<Successor>();
         Estado actual = (Estado) state;
         P = actual.getPaquetes();
@@ -42,9 +43,10 @@ public class Sucesor0 implements SuccessorFunction {
                     Estado sucesor = new Estado(newFelicidad,newCostes, newEspLibre,newAsig);
 
                     set(sucesor, i, j); // aplicamos el operador set
-
                     // añadimos el sucesor a la lista
+                    //System.out.println("Metemos el paquete " + i + " en la oferta" + j);
                     ret.add(new Successor("Metemos el paquete " + i + " en la oferta" + j, sucesor));
+
                 }
             }
         }
@@ -68,11 +70,9 @@ public class Sucesor0 implements SuccessorFunction {
                         Estado sucesor = new Estado(newFelicidad, newCostes, newEspLibre, newAsig);
                         //Cambiamos los datos del sucesor
                         intecambiamosIconJ(sucesor, i, j);
-
-                        ret.add(new Successor("intercambiamos " + i + " con " + j, sucesor));
-
-
-
+                        Successor anadir = new Successor("intercambiamos " + i + " con " + j, sucesor);
+                        ret.add(anadir);
+                        //System.out.println("intercambiamos" + i + " con " + j);
                     }
                 }
             }
@@ -82,17 +82,8 @@ public class Sucesor0 implements SuccessorFunction {
     }
 
     private void intecambiamosIconJ(Estado e, int i, int j) {
-        //Deshacemos felicidad, coste y ocupacion
         Paquetes p = e.getPaquetes();
         Transporte t = e.getTransporte();
-
-        //Deshacemos felicidad
-        int felicidad = e.getFelicidad() - calcular_felicidad(e,i);
-        felicidad-= calcular_felicidad(e,j);
-
-        //Deshacemos costes
-        double costes = e.getCostes() - calcular_costes(e, i);
-        costes-=calcular_costes(e, j);
 
         //Deshacemos espacio libre
         ArrayList<Double> espLibre = (ArrayList<Double>)e.getEspLibre().clone();
@@ -106,49 +97,15 @@ public class Sucesor0 implements SuccessorFunction {
         e.setAsig(i,ofertaAnteriorJ);
         e.setAsig(j,ofertaAnteriorI);
 
-        //Hacemos felicidad
-        felicidad += calcular_felicidad(e, i) + calcular_felicidad(e,j);
-        //Hacemos costes
-        costes += calcular_costes(e,i) + calcular_costes(e,j);
         //Hacemos espacio libre
         espLibre.set(ofertaAnteriorJ,espLibre.get(ofertaAnteriorJ)+p.get(i).getPeso());
         espLibre.set(ofertaAnteriorI,espLibre.get(ofertaAnteriorI)+p.get(j).getPeso());
 
         //Seteamos felicidad costes y espacio libre
-        e.setFelicidad(felicidad);
-        e.setCostes(costes);
+        e.calculaCoste();
+        e.calculaFelicidad();
         e.setEspLibre(espLibre);
     }
-
-    // pre: el Estado e es un estado inicializado. El paquete i esta asignado a alguna oferta en el estado e
-    // post: devuelve el entero correspondiente a la felicidad que aporta i en el estado e
-    private int calcular_felicidad (Estado e, int i){
-        int ofertaAnterior = e.getAsig().get(i);
-        int prioridad = P.get(i).getPrioridad();
-        int dias = T.get(ofertaAnterior).getDias();
-        if (prioridad != 0) {
-            if (prioridad == 1) {if (dias==1) return 1; }
-            else {
-                if (dias< 4) return (4 - dias);
-            }
-        }
-        return 0;
-    }
-
-
-    // pre: el Estado e es un estado inicializado. El paquete i esta asignado a alguna oferta en el estado e
-    // post: devuelve el double correspondiente a los costes que supone i en el estado e.
-    private double calcular_costes (Estado e, int i){
-        int ofertaAnterior = e.getAsig().get(i);
-        int noches_almacen;
-        int dias_viaje = T.get(ofertaAnterior).getDias();
-        if (dias_viaje == 1) noches_almacen = 0;
-        else if (dias_viaje <= 3) noches_almacen = 1;
-        else noches_almacen = 2;
-        return P.get(i).getPeso()*T.get(ofertaAnterior).getPrecio() + 0.25 * P.get(i).getPeso() * noches_almacen;
-    }
-
-
 
     // pre: el Estado e es un estado inicializado. El Paquete identificado por i cumple todas las condiciones para ser
     //      asignado a la oferta j
@@ -158,10 +115,6 @@ public class Sucesor0 implements SuccessorFunction {
         Paquetes p = e.getPaquetes();
         Transporte t = e.getTransporte();
 
-        //Deshacemos felicidad
-        int felicidad = e.getFelicidad() - calcular_felicidad(e,i);
-        //Deshacemos costes
-        double costes = e.getCostes() - calcular_costes(e, i);
         //Deshacemos espacio libre
         ArrayList<Double> espLibre = (ArrayList<Double>)e.getEspLibre().clone();
         int ofertaAnterior = e.getAsig().get(i);
@@ -170,16 +123,11 @@ public class Sucesor0 implements SuccessorFunction {
         //Hacemos la nueva asignación
         e.setAsig(i,j);
 
-        //Hacemos felicidad
-        felicidad += calcular_felicidad(e, i);
-        //Hacemos costes
-        costes += calcular_costes(e,i);
-        //Hacemos espacio libre
         espLibre.set(j,espLibre.get(j)-p.get(i).getPeso());
 
         //Seteamos felicidad costes y espacio libre
-        e.setFelicidad(felicidad);
-        e.setCostes(costes);
+        e.calculaCoste();
+        e.calculaFelicidad();
         e.setEspLibre(espLibre);
     }
 
