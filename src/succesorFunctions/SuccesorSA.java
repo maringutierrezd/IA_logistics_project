@@ -98,10 +98,6 @@ public class SuccesorSA implements SuccessorFunction{
         e.setAsig(i,ofertaAnteriorJ);
         e.setAsig(j,ofertaAnteriorI);
 
-        //Hacemos espacio libre
-        espLibre.set(ofertaAnteriorJ,espLibre.get(ofertaAnteriorJ)+p.get(i).getPeso());
-        espLibre.set(ofertaAnteriorI,espLibre.get(ofertaAnteriorI)+p.get(j).getPeso());
-
         //Seteamos felicidad costes y espacio libre
         e.calculaCoste();
         e.calculaFelicidad();

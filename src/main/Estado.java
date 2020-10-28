@@ -4,6 +4,7 @@ import java.util.*;
 
 import static java.lang.Math.round;
 
+//TODO: No hace falta tener la lista de paquetes y ofertas en el estado. Es info fija.
 public class Estado {
     // Atributos privados:
     static Paquetes P;		// Inputs
@@ -109,13 +110,34 @@ public class Estado {
         costes = 0;
         for(int i = 0; i < asig.size(); ++i) {
             int dias_viaje =  T.get(asig.get(i)).getDias();
-            if (dias_viaje == 1) noches_almacen = 0;
-            else if (dias_viaje <= 3) noches_almacen = 1;
+            if (dias_viaje <= 2) noches_almacen = 0;
+            else if (dias_viaje <= 4) noches_almacen = 1;
             else noches_almacen = 2;
             costes+=P.get(i).getPeso()* T.get(asig.get(i)).getPrecio() + 0.25 * P.get(i).getPeso() * noches_almacen;
         }
     }
 
+    private double obtenPesoAsignado(int idOferta) {
+        double ret = 0.0;
+        for(int i=0; i<P.size(); ++i) {
+            if(asig.get(i) == idOferta) {
+                ret += P.get(i).getPeso();
+            }
+        }
+        return ret;
+    }
+    public void ofertaCheck() {
+        int nErr = 0;
+        for(int i=0; i<T.size(); ++i) {
+            Oferta o = T.get(i);
+            double pesoMax = o.getPesomax();
+            double pesoActual = obtenPesoAsignado(i);
+            if(pesoActual>pesoMax) ++nErr;
+        }
+        System.out.println("Número de errores = " + nErr);
+    }
+
+    //TODO: Asegurarse de que no se asignan a ofertas de prioridad mayor
     private int auxGenerador1 (int currentOfert, ArrayList <Integer> paq) {
         //Vamos asignando a cada paquete una oferta sin tener en cuenta el precio (pero calculandolo)
         //Asignamos los de prioridad1
