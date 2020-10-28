@@ -48,7 +48,7 @@ public class SuccesorSA implements SuccessorFunction{
 
                     // añadimos el sucesor a la lista
                     //System.out.println("Metemos el paquete " + i + " en la oferta" + j);
-                    ret.add(new Successor("Metemos el paquete " + i + " en la oferta" + j, sucesor));
+                    ret.add(new Successor(String.valueOf(sucesor.getCostes()), sucesor));
                     corr = true;
                 }
             }
@@ -71,8 +71,7 @@ public class SuccesorSA implements SuccessorFunction{
                     Estado sucesor = new Estado(newFelicidad, newCostes, newEspLibre, newAsig);
                     //Cambiamos los datos del sucesor
                     intecambiamosIconJ(sucesor, i, j);
-                    Successor anadir = new Successor("intercambiamos " + i + " con " + j, sucesor);
-                    ret.add(anadir);
+                    ret.add(new Successor(String.valueOf(sucesor.getCostes()), sucesor));
                     corr = true;
                     //System.out.println("intercambiamos" + i + " con " + j);
                 }
