@@ -8,35 +8,50 @@ import aima.search.framework.Problem;
 
 import java.util.Date;
 import java.util.Properties;
+import java.util.Scanner;
 
 import static java.lang.System.exit;
 
 public class Main {
 
     public static void main (String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Indica el número de paquetes, seed, proporción, heurística y generador que quieras usar. ");
+        System.out.println("Por ultimo escribe 'M' para usar el operador de mover unicamente o 'MI' para usar mover intercambiar. Por ejemplo: 100 1234 1.2 2 1 MI");
+        int npaq = sc.nextInt();
+        int seed = sc.nextInt();
+        double prop = sc.nextDouble();
+        int heu = sc.nextInt();
+        int gen = sc.nextInt();
+        String op = sc.nextLine();
 
         //Aqui hemos de definir los paquetes, las ofertas.. En definitiva, el problema
-        Paquetes paquetes = new Paquetes(100, 1234 ); //la seed 1234 es la del experimento que debemos hacer
-
-        Transporte transporte = new Transporte(paquetes, 1.2, 1234);
+        Paquetes paquetes = new Paquetes(npaq, seed); //la seed 1234 es la del experimento que debemos hacer
+        Transporte transporte = new Transporte(paquetes, prop, seed);
         //Ahora creamos el estado inicial
         Estado e = new Estado(paquetes, transporte);
-        // 'e' aún no es una solución, hay que generar una solucion inicial.
-        //System.out.println("Los paquetes son " + paquetes.toString());
-        //System.out.println("Los ofertas son " + transporte.toString());
 
+        System.out.println("Pulsa 'H' para utilizar Hill Climbing. Pulsa 'S' para usar Simulated annealing. Pulsa enter al final.");
+        String algorithm = sc.nextLine();
 
         double time = new Date().getTime();
-        //Generamos el estado (solucion inicial)
-        e.generador2();
-        System.out.println(paquetes);
-        System.out.println(transporte);
-        System.out.println(e.getAsig());
+
+        if (gen == 1) e.generador1();
+        else e.generador2();
+
+
         System.out.println("La felicidad de la solución inicial es " + e.getFelicidad());
         System.out.println("El coste de la solución inicial es " + e.getCostes() + "\n");
 
+
+        if (algorithm == "H"){
+            //Generamos el problema (solucion inicial, succesor function, goal test, heuristic function)
+            Sucesor0 succ0 = new Sucesor0(true); //Hill Climbing----------------------------
+            Problem problemHC = new Problem(e, succ0, state->true, new Heuristica1());
+        }
+
+
         //Generamos el problema (solucion inicial, succesor function, goal test, heuristic function)
-        //Sucesor0 succ0 = new Sucesor0(true); //Hill Climbing----------------------------
         SuccesorSA succ0 = new SuccesorSA(true,1234); //Simulated Annealing--------------------
         Problem problemHC = new Problem(e, succ0, state->true, new Heuristica1());
         try{

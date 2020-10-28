@@ -4,7 +4,6 @@ import java.util.*;
 
 import static java.lang.Math.round;
 
-//TODO: No hace falta tener la lista de paquetes y ofertas en el estado. Es info fija.
 public class Estado {
     // Atributos privados:
     static Paquetes P;		// Inputs
@@ -117,7 +116,6 @@ public class Estado {
         }
     }
 
-    //TODO: Asegurarse de que no se asignan a ofertas de prioridad mayor
     private int auxGenerador1 (int currentOfert, ArrayList <Integer> paq) {
         //Vamos asignando a cada paquete una oferta sin tener en cuenta el precio (pero calculandolo)
         //Asignamos los de prioridad1
